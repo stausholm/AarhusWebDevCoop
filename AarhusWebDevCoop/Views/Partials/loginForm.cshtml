@@ -1,0 +1,75 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+
+
+@using System.Web.Mvc.Html
+@using ClientDependency.Core.Mvc
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using Umbraco.Web.Controllers
+
+@{
+    var loginModel = new LoginModel();
+    
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+    Html.RequiresJs("/umbraco_client/ui/jquery.js");
+    Html.RequiresJs("/umbraco_client/Application/JQuery/jquery.validate.min.js");
+    Html.RequiresJs("/umbraco_client/Application/JQuery/jquery.validate.unobtrusive.min.js");
+}
+
+@* NOTE: This RenderJsHere code should be put on your main template page where the rest of your script tags are placed *@
+@Html.RenderJsHere()
+
+<div class="container">
+    @if (!Members.GetCurrentLoginStatus().IsLoggedIn)
+    {
+        // display the form
+        using (Html.BeginUmbracoForm<UmbLoginController>("HandleLogin", new { @class = "form-horizontal" }))
+        {
+            <h1>Login</h1>
+            @Html.ValidationSummary("loginModel", true)
+
+            <div class="form-group">
+                @Html.LabelFor(m => loginModel.Username, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(m => loginModel.Username, new { @class = "form-control", placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => loginModel.Username)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => loginModel.Password, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-6">
+                    @Html.PasswordFor(m => loginModel.Password, new { @class = "form-control", placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => loginModel.Password)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                    <button class="btn btn-primary input-medium pullleft">Login</button>
+                </div>
+            </div>
+
+        }
+    }
+    else
+    {
+        <p>
+            You are currently logged in as
+            @Members.GetCurrentLoginStatus().Name
+
+        </p>
+        var logoutModel = new PostRedirectModel();
+        logoutModel.RedirectUrl = "/";
+        using (Html.BeginUmbracoForm<UmbLoginStatusController>("HandleLogout"))
+        {
+            <button>Logout</button>
+            @Html.HiddenFor(m => logoutModel.RedirectUrl)
+        }
+
+    }
+
+
+    
+</div>
+

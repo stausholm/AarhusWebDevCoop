@@ -1,0 +1,25 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+<div class="jumbotron">
+      <div class="container">
+        <h1>@Umbraco.Field("siteTitle")</h1>
+        <p>Lav en property til det her</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-8">
+          <h2>@Umbraco.Field("headingMainContent")</h2>
+          <p>@Umbraco.Field("mainContent")</p>
+        </div>
+        <div class="col-md-4">
+            <h2>Completed projects</h2>
+            <p>5 most recently completed projects</p>
+            @Umbraco.RenderMacro("listNewestProjects")
+        </div>
+      </div>
